@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        #container {
+            display: grid;
+            grid-template-columns: 25% 25% 25% 25%;
+            width: 80%;
+            margin: auto;
+
+        }
+
+        img {
+            width: 70%;
+            height: 200px;
+        }
+
+        .box1 {
+            width: 60%;
+            text-align: center;
+            margin: auto;
+        }
+        .sptag{
+            color: green;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="box1">
+        <input type="text" id="moviename" placeholder="enter movie name"><br>
+        <button onclick="getdata()">search</button>
+    </div>
+    <div id="container">
+
+    </div>
+
+</body>
+
+</html>
+<script>
+
+    async function getdata() {
+        let city = document.getElementById("moviename").value;
+        try {
+            let data = await fetch(`http://www.omdbapi.com/?t=${city}&apikey=60ac49b4`)
+            let data2 = await data.json();
+            if (data2.Response == "False") {
+                errorpage()
+            }
+            else {
+                showdata(data2);
+
+            }
+
+        }
+        catch (e) {
+            console.log(e, "hi");
+        }
+    }
+
+    function showdata(d) {
+        
+
+        var parent = document.getElementById("container");
+        parent.innerHTML = "";
+
+        let div = document.createElement('div');
+
+
+        let img = document.createElement('img');
+        img.src = d.Poster
+
+
+        let name = document.createElement('p');
+        name.innerHTML = `Movie name=${d.Title}`
+
+        let year = document.createElement('p');
+        year.innerHTML = `Year= ${d.Year}`;
+
+        let released = document.createElement('p');
+        released.innerHTML = ` Released date=${d.Released}`
+
+        let imdb = document.createElement('p');
+        imdb.innerHTML = ` imdb Rating= ${d.imdbRating}`
+
+        let recmd = document.createElement('p');
+        recmd.setAttribute('class','sptag')
+        recmd.innerHTML = `recommended`
+
+
+        if (d.imdbRating > 8.5) {
+           div.append(img, name, year, released, imdb,recmd);
+        }
+        else{
+        div.append(img, name, year, released, imdb);
+        }
+        parent.appendChild(div);
+
+
+
+    }
+
+    function errorpage() {
+
+        var parent = document.getElementById("container");
+        parent.innerHTML = "";
+
+        let div = document.createElement('div');
+
+        let img = document.createElement('img');
+        img.src = "https://media4.giphy.com/media/1wnqG7rvm1fvHqyelX/200w.webp?cid=ecf05e4732techm6r9h33jxk2otpv037hdsrkie8ymdxy0dv&rid=200w.webp&ct=g"
+
+
+        let name = document.createElement('p');
+        name.innerHTML = `please provide corect movie name`
+        div.append(img, name);
+        parent.appendChild(div);
+
+
+    }
+
+</script>
