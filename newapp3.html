@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .navbar {
+            width: 80%;
+            background-color: rgb(126, 101, 101);
+            margin: auto;
+        }
+
+        button {
+            background-color: grey;
+            color: hotpink;
+            background: none;
+            height: 50px;
+
+
+        }
+
+        #container {
+            width: 60%;
+            margin: auto;
+        }
+
+        img {
+            width: 30%;
+            height: 200px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .box {
+            overflow-wrap: break-word;
+            text-align: center;
+            width: 70%;
+        }
+
+        p {
+            overflow-wrap: break-word;
+        }
+
+        .floatr {
+
+            float: right;
+        }
+
+        .sp {
+            height: 50px;
+            border: 0;
+            background: pink;
+            border: black;
+        }
+
+        #button {
+            width: 20%;
+            text-align: center;
+            margin: auto;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>pagination</h1>
+    <div class="navbar">
+        <button onclick="sport()">sports</button>
+        <button onclick="enter()">Entertainment</button>
+        <button onclick="tec()">Technology</button>
+        <button onclick="search()" class="floatr ">search</button>
+        <input class="floatr sp" type="text" id="search">
+    </div>
+    <div id='container'></div>
+
+    <div id="button"></div>
+
+</body>
+
+</html>
+<script>
+    var search1;
+    function search() {
+        var search1 = document.getElementById("search").value;
+        main();
+
+    }
+
+
+
+
+    var data;
+    async function main() {
+        data = await getdata();
+        data = data.articles
+        console.log(data);
+        showdata();
+    }
+
+    async function getdata() {
+        try {
+            let data1 = await fetch(`https://newsapi.org/v2/everything?q=${search1}&from=2021-06-25&sortBy=popularity&apiKey=2370b674f5ec4c80add5294713a14f1e`);
+            data1 = await data1.json();
+            return data1;
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    function showbutton(index) {
+        var temp = 0;
+        let button_div = document.getElementById('button');
+        button_div.innerHTML = null;
+        for (var i = 0; i < 10; i++) {
+            var buuton = document.createElement('button');
+            buuton.innerHTML = `${i}`;
+
+            buuton.setAttribute('id', `${i}`);
+            buuton.onclick = showdata
+            button_div.appendChild(buuton);
+        }
+        let btn = document.getElementById(index);
+        btn.style.backgroundColor = "green";
+    }
+
+
+    // function showdata(){
+    //     let id=Number(this.id);
+    //     let pagedata=data.slice(id*10,id*10+10);
+    //     let paret=document.getElementById('p');
+    //     pagedata.forEach(function(d){
+    //       let p=document.createElement('p');
+    //       p.innerHTML=`${d.id}<br>${d.name}`
+    //       paret.appendChild(p);
+
+    //     });
+    //     console.log(id)
+
+    //    showbutton(id);
+
+
+
+    // }
+
+
+
+
+
+    function showdata() {
+        let id = Number(this.id);
+        console.log(id);
+        let pagedata = data.splice(1 + id, 5 + id);
+        console.log(pagedata);
+        let paret = document.getElementById('container');
+        paret.innerHTML = "";
+        pagedata.forEach(function (d) {
+            let div = document.createElement('div');
+            div.setAttribute("class", "flex");
+            let div2 = document.createElement('div');
+            div2.setAttribute("class", "box");
+            let h3 = document.createElement('h3');
+            let p1 = document.createElement('p');
+            let img = document.createElement('img');
+            img.src = `${d.urlToImage}`;
+            h3.innerHTML = `${d.author}`;
+            p1.innerHTML = `${d.description}`;
+            div2.append(h3, p1);
+            div.append(img, div2);
+            paret.appendChild(div);
+
+        });
+        showbutton(id)
+
+
+
+
+    }
+
+</script>
