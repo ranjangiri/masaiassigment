@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+    .navbar{
+        width:80%;
+        background-color: rgb(126, 101, 101);
+        margin: auto;
+    }
+    button{
+        background-color: grey;
+        color: hotpink;
+        background: none;
+        height: 50px;
+
+
+    }
+        #container {
+            margin: auto;
+            width: 60%;
+            border: 1px solid black;
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: 100%;
+        }
+        img{
+            width:30%;
+            height: 200px;
+        }
+        .flex{
+            display: flex;
+        }
+   
+   .box{
+       overflow-wrap: break-word;
+       text-align: center;
+       width: 70%;
+   }
+   p{
+       overflow-wrap: break-word;
+   }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="navbar">
+        <button onclick="sport()">sports</button>
+        <button onclick="enter()">Entertainment</button>
+        <button onclick="tec()">Technology</button>
+    </div>
+    <div id='container'></div>
+</body>
+</html>
+<script>
+    var category;
+    function sport(){
+        category="sports"
+        getdata();
+        main();
+    }
+    function enter() {
+            category = "entertainment"
+            getdata();
+            main();
+        }
+        function tec() {
+                category = "technology"
+                getdata();
+                main();
+            }
+    var data;
+            async function main() {
+                data = await getdata();
+                console.log(data);
+                data = data.articles
+                showdata()
+            }
+
+            
+            async function getdata() {
+                try {
+                    let data1 = await fetch(`https://newsapi.org/v2/top-headlines?country=in&category=${category}&apiKey=2370b674f5ec4c80add5294713a14f1e`);
+                    data1 = await data1.json();
+                    return data1;
+                }
+                catch (e) {
+                    console.log(e);
+                }
+            }
+
+
+            function showdata() {
+                let pagedata = data.splice(1, 10);
+                let paret = document.getElementById('container');
+                paret.innerHTML="";
+                pagedata.forEach(function (d) {
+                    let div = document.createElement('div');
+                    div.setAttribute("class", "flex");
+                    let div2 = document.createElement('div');
+                    div2.setAttribute("class", "box");
+                    let h3 = document.createElement('h3');
+                    let p1 = document.createElement('p');
+                    let img = document.createElement('img');
+                    img.src = `${d.urlToImage}`;
+                    h3.innerHTML = `${d.author}`;
+                    p1.innerHTML = `${d.description}`;
+                    div2.append(h3, p1);
+                    div.append(img, div2);
+                    paret.appendChild(div);
+
+                });
+
+
+
+
+            }
+    
+</script>
